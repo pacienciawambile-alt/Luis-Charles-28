@@ -44,7 +44,7 @@ def home():
     scores = load_scores()
     best_scores = sorted(scores, key=lambda x: x["score"], reverse=True)[:5]  # Top 5
 
-    return render_template("Index.html",
+    return render_template("index.html",
                            snake_color=json.dumps(snake_color),
                            food_color=food_color,
                            background=background,
