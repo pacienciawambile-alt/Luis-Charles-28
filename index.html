@@ -7,14 +7,44 @@
 </head>
 <body>
 
-    <h1>Guima cobra</h1>
+<h1>Guima cobra</h1>
 
-    <div class="game-container">
-        <canvas id="game" width="500" height="500"></canvas>
+<!-- MENU -->
+<div id="menu">
+    <button id="menuBtn">⋮</button>
+    <div id="menuContent" class="hidden">
+        <p>Máx: <span id="maxScore">0</span></p>
+        <p>Mín: <span id="minScore">0</span></p>
+        <button id="resetScore">Zerar Pontuação</button>
     </div>
+</div>
 
-    <p class="score">Pontuação: <span id="score">0</span></p>
+<div class="game-container">
+    <canvas id="game" width="500" height="500"></canvas>
+</div>
 
-    <script src="index.js"></script>
+<!-- CONTROLES MOBILE -->
+<div id="controls">
+    <div class="row">
+        <button onclick="setDirection('UP')">⬆️</button>
+    </div>
+    <div class="row">
+        <button onclick="setDirection('LEFT')">⬅️</button>
+        <button onclick="setDirection('DOWN')">⬇️</button>
+        <button onclick="setDirection('RIGHT')">➡️</button>
+    </div>
+</div>
+
+<!-- BOTÃO RESTART -->
+<button id="restart">Reiniciar</button>
+
+<p class="score">Pontuação: <span id="score">0</span></p>
+
+<!-- SONS -->
+<audio id="eatSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+<audio id="gameOverSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+
+<script src="index.js"></script>
+
 </body>
 </html>
