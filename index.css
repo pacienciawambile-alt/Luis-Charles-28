@@ -1,33 +1,43 @@
-body {
-    background: radial-gradient(circle, #43bb49, #c7cfd1, #b2c269);
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* remove barra de rolagem */
     font-family: 'Segoe UI', sans-serif;
-    text-align: center;
+    background: radial-gradient(circle, #43bb49, #c7cfd1, #b2c269);
     color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 h1 {
-    margin-top: 20px;
+    margin-top: 10px;
     text-shadow: 0 0 10px #e7da92;
+    text-align: center;
 }
 
 .game-container {
+    flex: 1;
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    width: 100%;
 }
 
 canvas {
     background: rgba(12, 12, 12, 0.7);
     border-radius: 15px;
     box-shadow: 0 0 30px #e0e0de;
-}
-
-#restart {
-    display: none;
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+    width: 90vmin;   /* canvas se ajusta ao menor lado da tela */
+    height: 90vmin;
+    max-width: 500px;
+    max-height: 500px;
 }
 
 /* MENU */
@@ -56,29 +66,38 @@ canvas {
     display: none;
 }
 
+/* PONTUAÇÃO */
 .score {
-    margin-top: 15px;
-    font-size: 20px;
+    font-size: 1.5rem;
+    margin: 10px;
 }
 
-/* CONTROLES */
+/* CONTROLES MOBILE */
 #controls {
-    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 10px;
 }
 
-.row {
+#controls .row {
     display: flex;
     justify-content: center;
 }
 
 #controls button {
-    font-size: 20px;
+    font-size: 1.5rem;
     padding: 10px;
     margin: 5px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
+}
+
+/* RESTART */
+#restart {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
