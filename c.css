@@ -1,0 +1,38 @@
+body {
+    background: radial-gradient(circle, #43bb49, #c7cfd1, #b2c269);
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    margin-top: 20px;
+    text-shadow: 0 0 10px #e7da92;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+canvas {
+    background: rgba(12, 12, 12, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 0 30px #e0e0de;
+}
+
+#restart{
+    display: none;
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+
+.score {
+    margin-top: 15px;
+    font-size: 20px;
+}
