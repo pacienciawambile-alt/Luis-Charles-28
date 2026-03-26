@@ -1,6 +1,15 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+// ajusta canvas para o menor lado da tela
+function resizeCanvas() {
+    const size = Math.min(window.innerWidth, window.innerHeight) * 0.9; // 90% da tela
+    canvas.width = size;
+    canvas.height = size;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // inicial
 const box = 20;
 let score = 0;
 let maxScore = 0;
