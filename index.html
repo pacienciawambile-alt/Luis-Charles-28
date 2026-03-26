@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Guima Cobra</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="C.css">
 </head>
 <body>
 
@@ -15,10 +15,8 @@
     <div id="menuContent" class="hidden">
         <p>Máx: <span id="maxScore">0</span></p>
         <p>Mín: <span id="minScore">0</span></p>
+        <p>Melhor Jogador: <span id="bestPlayer">N/A</span></p>
         <button id="resetScore">Zerar Pontuação</button>
-        <hr>
-        <h3>Melhores Jogadores</h3>
-        <ul id="bestPlayers"></ul>
     </div>
 </div>
 
@@ -46,25 +44,6 @@
 <audio id="eatSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
 <audio id="gameOverSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
 
-<script>
-    // Dados do Python
-    const snakeColors = {{ snake_color | safe }};
-    const foodColor = "{{ food_color }}";
-    const background = "{{ background }}";
-    const obstacles = {{ obstacles | safe }};
-    const bestScores = {{ best_scores | safe }};
-
-    document.body.style.background = background;
-
-    // Preencher menu com melhores jogadores
-    const bestPlayersEl = document.getElementById("bestPlayers");
-    bestScores.forEach(p => {
-        const li = document.createElement("li");
-        li.innerText = `${p.name}: ${p.score}`;
-        bestPlayersEl.appendChild(li);
-    });
-</script>
-
-<script src="index.js"></script>
+<script src="j.js"></script>
 </body>
 </html>
