@@ -2,49 +2,74 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const box = 20;
 let score = 0;
-let maxScore = 0;
-let minScore = 0;
 let snake, food, direction, game;
 
-// Ajustar canvas para caber na tela
+// Melhor jogador armazenado no localStorage
+let bestScore = parseInt(localStorage.getItem("bestScore")) || 0;
+let bestPlayerName = localStorage.getItem("bestPlayer") || "N/A";
+
+// Mínima pontuação
+let minScore = 0;
+
+document.getElementById("maxScore").innerText = bestScore;
+document.getElementById("minScore").innerText = minScore;
+document.getElementById("bestPlayer").innerText = bestPlayerName;
+
+// Redimensiona canvas responsivo
 function resizeCanvas() {
-    const size = Math.min(window.innerWidth, window.innerHeight)*0.9;
+    const size = Math.min(window.innerWidth, window.innerHeight) * 0.9;
     canvas.width = size;
     canvas.height = size;
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Inicializar jogo
+// Cores da cobra e comida
+const snakeColors = ["#ffcc00", "#ffff00", "#ff9900"];
+const foodColor = "#ff4444";
+
+// Obstáculos coloridos
+const obstacles = [];
+for (let i = 0; i < 8; i++) {
+    obstacles.push({
+        x: Math.floor(Math.random() * 19),
+        y: Math.floor(Math.random() * 19),
+        color: `#${Math.floor(Math.random()*16777215).toString(16)}`
+    });
+}
+
+// Inicializa o jogo
 function initGame() {
-    snake = [{x: 9*box, y:10*box}];
+    snake = [{ x: 9 * box, y: 10 * box }];
     direction = undefined;
     score = 0;
-    food = {x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*19)*box};
+    food = { x: Math.floor(Math.random() * 19) * box, y: Math.floor(Math.random() * 19) * box };
     document.getElementById("score").innerText = score;
 }
 
-// Direção teclado e mobile
+// Funções de direção
 function changeDirection(newDir) {
     if(newDir==="UP" && direction!=="DOWN") direction="UP";
     if(newDir==="DOWN" && direction!=="UP") direction="DOWN";
     if(newDir==="LEFT" && direction!=="RIGHT") direction="LEFT";
     if(newDir==="RIGHT" && direction!=="LEFT") direction="RIGHT";
 }
+function setDirection(dir){changeDirection(dir);}
 document.addEventListener("keydown", e=>{
     if(e.key==="ArrowUp") changeDirection("UP");
     if(e.key==="ArrowDown") changeDirection("DOWN");
     if(e.key==="ArrowLeft") changeDirection("LEFT");
     if(e.key==="ArrowRight") changeDirection("RIGHT");
 });
-function setDirection(dir){changeDirection(dir);}
 
 // Menu
 document.getElementById("menuBtn").onclick = ()=>document.getElementById("menuContent").classList.toggle("hidden");
 document.getElementById("resetScore").onclick = ()=>{
-    maxScore=0; minScore=0;
+    bestScore=0; bestPlayerName="N/A"; minScore=0;
     document.getElementById("maxScore").innerText=0;
     document.getElementById("minScore").innerText=0;
+    document.getElementById("bestPlayer").innerText="N/A";
+    localStorage.clear();
 };
 
 // Desenhar
@@ -96,7 +121,18 @@ function draw() {
         alert("Game Over!");
         document.getElementById("restart").style.display="block";
 
-        if(score>maxScore){maxScore=score; document.getElementById("maxScore").innerText=maxScore;}
+        // Atualiza melhor jogador
+        if(score > bestScore){
+            bestScore = score;
+            bestPlayerName = prompt("Novo melhor jogador! Digite seu nome:", "Jogador");
+            localStorage.setItem("bestScore", bestScore);
+            localStorage.setItem("bestPlayer", bestPlayerName);
+        }
+
+        // Atualiza menu
+        document.getElementById("maxScore").innerText = bestScore;
+        document.getElementById("bestPlayer").innerText = bestPlayerName;
+
         if(minScore===0||score<minScore){minScore=score; document.getElementById("minScore").innerText=minScore;}
         return;
     }
