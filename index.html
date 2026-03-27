@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Guima Cobra</title>
+
+    <!-- 🔥 ESSENCIAL PARA TELEMÓVEL -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
 
-<h1>Guima Cobra</h1>
+<h1>🐍 Guima Cobra</h1>
 
 <!-- MENU -->
 <div id="menu">
@@ -20,11 +24,12 @@
     </div>
 </div>
 
+<!-- JOGO -->
 <div class="game-container">
     <canvas id="game"></canvas>
 </div>
 
-<!-- CONTROLES MOBILE -->
+<!-- CONTROLES GRANDES -->
 <div id="controls">
     <div class="row">
         <button onclick="setDirection('UP')">⬆️</button>
@@ -36,8 +41,10 @@
     </div>
 </div>
 
-<button id="restart">Reiniciar</button>
+<!-- BOTÃO RESTART -->
+<button id="restart" style="display:none;">🔄 Reiniciar</button>
 
+<!-- SCORE -->
 <p class="score">Pontuação: <span id="score">0</span></p>
 
 <!-- SONS -->
@@ -45,5 +52,6 @@
 <audio id="gameOverSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
 
 <script src="index.js"></script>
+
 </body>
 </html>
