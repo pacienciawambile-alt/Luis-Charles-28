@@ -1,45 +1,69 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const box = 20;
+
+let gridSize = 20;
+let box;
+
 let score = 0;
 let snake, food, direction, game;
 
-// Pontuações e melhor jogador armazenados no localStorage
+// Scores
 let bestScore = parseInt(localStorage.getItem("bestScore")) || 0;
 let bestPlayerName = localStorage.getItem("bestPlayer") || "N/A";
 let minScore = parseInt(localStorage.getItem("minScore")) || 0;
 
-// Atualiza menu
 document.getElementById("maxScore").innerText = bestScore;
 document.getElementById("minScore").innerText = minScore;
 document.getElementById("bestPlayer").innerText = bestPlayerName;
 
-// Redimensiona canvas para responsivo
+// 🔥 RESIZE INTELIGENTE (ESPAÇO PARA BOTÕES)
 function resizeCanvas() {
-    const size = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+    const controlsHeight = 180;
+    const headerHeight = 100;
+
+    const availableHeight = window.innerHeight - controlsHeight - headerHeight;
+    const size = Math.min(window.innerWidth * 0.95, availableHeight);
+
     canvas.width = size;
     canvas.height = size;
+
+    box = canvas.width / gridSize;
 }
+
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Inicializa o jogo
+// 🎮 INICIAR JOGO
 function initGame() {
-    snake = [{ x: 9 * box, y: 10 * box }];
+    snake = [{
+        x: Math.floor(gridSize / 2) * box,
+        y: Math.floor(gridSize / 2) * box
+    }];
+
     direction = undefined;
     score = 0;
-    food = { x: Math.floor(Math.random() * 19) * box, y: Math.floor(Math.random() * 19) * box };
+
+    food = {
+        x: Math.floor(Math.random() * gridSize) * box,
+        y: Math.floor(Math.random() * gridSize) * box
+    };
+
     document.getElementById("score").innerText = score;
 }
 
-// Funções de direção
+// 🎯 CONTROLOS
 function changeDirection(newDir) {
     if (newDir === "UP" && direction !== "DOWN") direction = "UP";
     if (newDir === "DOWN" && direction !== "UP") direction = "DOWN";
     if (newDir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
     if (newDir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
 }
-function setDirection(dir){ changeDirection(dir); }
+
+function setDirection(dir) {
+    changeDirection(dir);
+}
+
+// Teclado
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowUp") changeDirection("UP");
     if (e.key === "ArrowDown") changeDirection("DOWN");
@@ -47,83 +71,88 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowRight") changeDirection("RIGHT");
 });
 
-// Menu
-document.getElementById("menuBtn").onclick = () => document.getElementById("menuContent").classList.toggle("hidden");
+// 📋 MENU
+document.getElementById("menuBtn").onclick = () =>
+    document.getElementById("menuContent").classList.toggle("hidden");
+
 document.getElementById("resetScore").onclick = () => {
-    bestScore = 0;
-    bestPlayerName = "N/A";
-    minScore = 0;
     localStorage.clear();
-    document.getElementById("maxScore").innerText = bestScore;
-    document.getElementById("minScore").innerText = minScore;
-    document.getElementById("bestPlayer").innerText = bestPlayerName;
+    location.reload();
 };
 
-// Sons
+// 🔊 SONS
 const eatSound = document.getElementById("eatSound");
 const gameOverSound = document.getElementById("gameOverSound");
 
-// Desenhar
+// 🎨 DESENHAR
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Desenhar cobra
-    snake.forEach((seg, index) => {
-        ctx.fillStyle = "yellow"; // cobra amarela
+    // Cobra
+    snake.forEach(seg => {
+        ctx.fillStyle = "yellow";
         ctx.fillRect(seg.x, seg.y, box, box);
     });
 
-    // Desenhar comida
-    ctx.fillStyle = "yellow"; // comida amarela
+    // Comida
+    ctx.fillStyle = "yellow";
     ctx.fillRect(food.x, food.y, box, box);
 
     let headX = snake[0].x;
     let headY = snake[0].y;
 
-    // Movimentos
+    // Movimento
     if (direction === "UP") headY -= box;
     if (direction === "DOWN") headY += box;
     if (direction === "LEFT") headX -= box;
     if (direction === "RIGHT") headX += box;
 
-    // Comer comida
+    // Comer
     if (headX === food.x && headY === food.y) {
         score++;
         document.getElementById("score").innerText = score;
-        eatSound.play().catch(() => { });
-        food = { x: Math.floor(Math.random() * 19) * box, y: Math.floor(Math.random() * 19) * box };
+
+        eatSound.play().catch(() => {});
+
+        food = {
+            x: Math.floor(Math.random() * gridSize) * box,
+            y: Math.floor(Math.random() * gridSize) * box
+        };
     } else {
         snake.pop();
     }
 
     let newHead = { x: headX, y: headY };
 
-    // Checagem de colisão (borda ou consigo mesma)
-    if (headX < 0 || headY < 0 || headX >= canvas.width || headY >= canvas.height ||
-        snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
-
+    // 💀 COLISÃO
+    if (
+        headX < 0 ||
+        headY < 0 ||
+        headX >= gridSize * box ||
+        headY >= gridSize * box ||
+        snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)
+    ) {
         clearInterval(game);
-        gameOverSound.play().catch(() => { });
+        gameOverSound.play().catch(() => {});
         alert("Game Over!");
 
-        // Mostrar botão reiniciar
         document.getElementById("restart").style.display = "block";
 
-        // Atualizar pontuação máxima e melhor jogador
+        // Melhor score
         if (score > bestScore) {
             bestScore = score;
-            bestPlayerName = prompt("Novo melhor jogador! Digite seu nome:", "Jogador");
+            bestPlayerName = prompt("Novo melhor jogador:", "Jogador");
+
             localStorage.setItem("bestScore", bestScore);
             localStorage.setItem("bestPlayer", bestPlayerName);
         }
 
-        // Atualizar pontuação mínima
+        // Pior score
         if (minScore === 0 || score < minScore) {
             minScore = score;
             localStorage.setItem("minScore", minScore);
         }
 
-        // Atualizar menu
         document.getElementById("maxScore").innerText = bestScore;
         document.getElementById("minScore").innerText = minScore;
         document.getElementById("bestPlayer").innerText = bestPlayerName;
@@ -134,7 +163,7 @@ function draw() {
     snake.unshift(newHead);
 }
 
-// Botão de reiniciar
+// 🔄 REINICIAR
 document.getElementById("restart").onclick = () => {
     clearInterval(game);
     initGame();
@@ -142,6 +171,6 @@ document.getElementById("restart").onclick = () => {
     game = setInterval(draw, 100);
 };
 
-// Iniciar o jogo
+// 🚀 START
 initGame();
 game = setInterval(draw, 100);
