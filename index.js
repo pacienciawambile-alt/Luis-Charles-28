@@ -1,8 +1,8 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let gridSize = 20;
-let box;
+let gridSize = 20; // número de quadrados
+let box; // tamanho do quadrado em pixels
 
 let score = 0;
 let snake, food, direction, game;
@@ -16,7 +16,7 @@ document.getElementById("maxScore").innerText = bestScore;
 document.getElementById("minScore").innerText = minScore;
 document.getElementById("bestPlayer").innerText = bestPlayerName;
 
-// 🔥 RESIZE INTELIGENTE (ESPAÇO PARA BOTÕES)
+// 🔥 RESIZE INTELIGENTE (canvas proporcional)
 function resizeCanvas() {
     const controlsHeight = 180;
     const headerHeight = 100;
@@ -36,16 +36,16 @@ resizeCanvas();
 // 🎮 INICIAR JOGO
 function initGame() {
     snake = [{
-        x: Math.floor(gridSize / 2) * box,
-        y: Math.floor(gridSize / 2) * box
+        x: Math.floor(gridSize / 2),
+        y: Math.floor(gridSize / 2)
     }];
 
     direction = undefined;
     score = 0;
 
     food = {
-        x: Math.floor(Math.random() * gridSize) * box,
-        y: Math.floor(Math.random() * gridSize) * box
+        x: Math.floor(Math.random() * gridSize),
+        y: Math.floor(Math.random() * gridSize)
     };
 
     document.getElementById("score").innerText = score;
@@ -63,7 +63,6 @@ function setDirection(dir) {
     changeDirection(dir);
 }
 
-// Teclado
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowUp") changeDirection("UP");
     if (e.key === "ArrowDown") changeDirection("DOWN");
@@ -91,23 +90,23 @@ function draw() {
     // Cobra
     snake.forEach(seg => {
         ctx.fillStyle = "yellow";
-        ctx.fillRect(seg.x, seg.y, box, box);
+        ctx.fillRect(seg.x * box, seg.y * box, box, box);
     });
 
     // Comida
     ctx.fillStyle = "yellow";
-    ctx.fillRect(food.x, food.y, box, box);
+    ctx.fillRect(food.x * box, food.y * box, box, box);
 
     let headX = snake[0].x;
     let headY = snake[0].y;
 
     // Movimento
-    if (direction === "UP") headY -= box;
-    if (direction === "DOWN") headY += box;
-    if (direction === "LEFT") headX -= box;
-    if (direction === "RIGHT") headX += box;
+    if (direction === "UP") headY -= 1;
+    if (direction === "DOWN") headY += 1;
+    if (direction === "LEFT") headX -= 1;
+    if (direction === "RIGHT") headX += 1;
 
-    // Comer
+    // Comer comida
     if (headX === food.x && headY === food.y) {
         score++;
         document.getElementById("score").innerText = score;
@@ -115,8 +114,8 @@ function draw() {
         eatSound.play().catch(() => {});
 
         food = {
-            x: Math.floor(Math.random() * gridSize) * box,
-            y: Math.floor(Math.random() * gridSize) * box
+            x: Math.floor(Math.random() * gridSize),
+            y: Math.floor(Math.random() * gridSize)
         };
     } else {
         snake.pop();
@@ -128,8 +127,8 @@ function draw() {
     if (
         headX < 0 ||
         headY < 0 ||
-        headX >= gridSize * box ||
-        headY >= gridSize * box ||
+        headX >= gridSize ||
+        headY >= gridSize ||
         snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)
     ) {
         clearInterval(game);
